@@ -16,7 +16,6 @@ message( STATUS "cmake version ${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}" )
 message( STATUS "libkvsns version ${LIBKVSNS_BASE_VERSION}")
 
 # Final tuning
-# Final tuning
 
 include(CheckIncludeFiles)
 include(CheckLibraryExists)
@@ -31,94 +30,13 @@ check_library_exists(
 	HAVE_INI_CONFIG
 	)
 
-if((NOT HAVE_INI_CONFIG) OR (NOT HAVE_INI_CONFIG_H))
-      message(FATAL_ERROR "Cannot find ini_config")
-endif((NOT HAVE_INI_CONFIG) OR (NOT HAVE_INI_CONFIG_H))
-
-## Check for MOTR
-find_library(HAVE_MOTR motr)
-check_library_exists(
-        motr
-        m0_init
-        ""
-        HAVE_MOTR
-	)
-check_include_files("motr/config.h" HAVE_MOTR_H)
-
-### Check for rados ###
-check_library_exists(
-	rados
-	rados_connect
-	""
-	HAVE_LIBRADOS
-	)
-check_include_files("rados/librados.h" HAVE_RADOS_H)
-
-if((NOT HAVE_LIBRADOS) OR (NOT HAVE_RADOS_H))
-      message(STATUS "Cannot find librados")
-endif((NOT HAVE_LIBRADOS) OR (NOT HAVE_RADOS_H))
-
-
-## Check for HIREDIS ##
-
-find_library(HAVE_HIREDIS hiredis)
-check_library_exists(
-    hiredis
-    redisCommand
-    ""
-    HAVE_HIREDIS
-    )
-check_include_files("hiredis/hiredis.h" HAVE_HIREDIS_H)
-
-## Set BCOND for spec file management */
-if (HAVE_RADOS_H AND HAVE_LIBRADOS)
-	set(BCOND_RADOS "%bcond_without")
-else (HAVE_RADOS_H AND HAVE_LIBRADOS)
-	set(BCOND_RADOS "%bcond_with")
-endif (HAVE_RADOS_H AND HAVE_LIBRADOS)
-
-if (HAVE_HIREDIS_H AND HAVE_HIREDIS)
-	set(BCOND_REDIS "%bcond_without")
-else (HAVE_HIREDIS_H AND HAVE_HIREDIS)
-	set(BCOND_REDIS "%bcond_with")
-endif (HAVE_HIREDIS_H AND HAVE_HIREDIS)
-
-
-if (HAVE_MOTR_H AND HAVE_MOTR)
-	set(BCOND_MOTR "%bcond_without")
-else (HAVE_MOTR_H AND HAVE_MOTR)
-	set(BCOND_MOTR "%bcond_with")
-endif (HAVE_MOTR_H AND HAVE_MOTR)
-
-# Check if a KVS if available
-set(HAVE_KVS FALSE)
-
-if (HAVE_HIREDIS_H AND HAVE_HIREDIS)
-	set(HAVE_KVS TRUE)
-endif (HAVE_HIREDIS_H AND HAVE_HIREDIS)
-
-if (HAVE_MOTR_H AND HAVE_MOTR)
-	set(HAVE_KVS TRUE)
-endif (HAVE_MOTR_H AND HAVE_MOTR)
-
-if (NOT HAVE_KVS)
-	message(FATAL_ERROR "Can't find a KVS")
-endif (NOT HAVE_KVS)
-
 # Build ancillary libs
-add_subdirectory(extstore)
-add_subdirectory(kvsal)
 add_subdirectory(kvsns)
 add_subdirectory(tests)
-add_subdirectory(hash)
 add_subdirectory(kvsns_shell)
 add_subdirectory(kvsns_script)
 add_subdirectory(kvsns_attach)
 add_subdirectory(kvsns_hsm)
-if (HAVE_MOTR AND HAVE_MOTR_H)
-	add_subdirectory(motr)
-endif (HAVE_MOTR AND HAVE_MOTR_H)
-
 
 # CPack / rpmbuild specific stuff
 set(CPACK_PACKAGE_FILE_NAME "libkvsns-Source" )

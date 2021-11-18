@@ -29,15 +29,6 @@ Provides: %{name} = %{version}-%{release}
 # %bcond_with means you add a "--with" option, default = without this feature
 # %bcond_without adds a"--without" so the feature is enabled by default
 
-@BCOND_RADOS@ rados
-%global use_rados %{on_off_switch rados}
-
-@BCOND_MOTR@ motr
-%global use_motr %{on_off_switch motr}
-
-@BCOND_REDIS@ redis
-%global use_redis %{on_off_switch redis}
-
 %description
 The libkvsns is a library that allows of a POSIX namespace built on top of
 a Key-Value Store.
@@ -47,63 +38,6 @@ Summary: Development file for the library libkvsns
 Group: Development/Libraries
 Requires: %{name} = %{version}-%{release} pkgconfig
 Provides: %{name}-devel = %{version}-%{release}
-
-# REDIS
-%if %{with redis}
-%package kvsal-redis
-Summary: The REDIS based kvsal
-Group: Applications/System
-Requires: %{name} = %{version}-%{release} librados2
-Provides: %{name}-kvsal-redis = %{version}-%{release}
-Requires: redis hiredis
-BuildRequires: hiredis-devel
-
-%description kvsal-redis
-This package contains a library for using REDIS as a KVS for libkvsns
-%endif
-
-%package extstore-crud_cache
-Summary: The CRUD cache based backend for libkvsns
-Group: Applications/System
-Requires: %{name} = %{version}-%{release} librados2
-Provides: %{name}-extstore-crud_cache = %{version}-%{release}
-
-%description extstore-crud_cache
-This package contains a library for using POSIX as a backed for libkvsns
-
-%package extstore-posix
-Summary: The (dummy) POSIX  based backend for libkvsns
-Group: Applications/System
-Requires: %{name} = %{version}-%{release} librados2
-Provides: %{name}-extstore-posix = %{version}-%{release}
-
-%description extstore-posix
-This package contains a library for using POSIX as a backed for libkvsns
-
-# RADOS
-%if %{with rados}
-%package extstore-rados
-Summary: The RADOS based backend for libkvsns
-Group: Applications/System
-Requires: %{name} = %{version}-%{release} librados2
-Provides: %{name}-extstore-rados = %{version}-%{release}
-
-%description extstore-rados
-This package contains a library for using RADOS as a backed for libkvsns
-%endif
-
-# MOTR
-%if %{with motr}
-%package motr
-Summary: The MOTR based backend for libkvsns
-Group: Applications/System
-Requires: %{name} = %{version}-%{release} cortx-motr
-Provides: %{name}-motr = %{version}-%{release}
-
-%description motr
-This package contains libraries for using CORTX-MOTR as a backend for libkvsns
-%endif
-
 
 %description devel
 The libkvsns is a library that allows of a POSIX namespace built on top of
@@ -138,24 +72,6 @@ mkdir -p %{buildroot}%{_libdir}/pkgconfig
 mkdir -p %{buildroot}%{_includedir}/kvsns
 mkdir -p %{buildroot}%{_sysconfdir}/kvsns.d
 install -m 644 include/kvsns/kvsns.h  %{buildroot}%{_includedir}/kvsns
-install -m 644 include/kvsns/kvsal.h  %{buildroot}%{_includedir}/kvsns
-install -m 644 include/kvsns/extstore.h  %{buildroot}%{_includedir}/kvsns
-%if %{with redis}
-install -m 644 kvsal/redis/libkvsal_redis.so %{buildroot}%{_libdir}
-%endif
-
-install -m 644 extstore/posix_store/libextstore_posix.so %{buildroot}%{_libdir}
-install -m 644 extstore/crud_cache/libextstore_crud_cache.so %{buildroot}%{_libdir}
-install -m 644 extstore/crud_cache/libobjstore_cmd.so %{buildroot}%{_libdir}
-%if %{with rados gnutls}
-install -m 644 extstore/rados/libextstore_rados.so %{buildroot}%{_libdir}
-%endif
-%if %{with motr}
-install -m 644 extstore/motr/libextstore_motr.so %{buildroot}%{_libdir}
-install -m 644 kvsal/motr/libkvsal_motr.so %{buildroot}%{_libdir}
-install -m 644 motr/libm0common.so %{buildroot}%{_libdir}
-%endif
-
 install -m 644 kvsns/libkvsns.so %{buildroot}%{_libdir}
 install -m 644 libkvsns.pc  %{buildroot}%{_libdir}/pkgconfig
 install -m 755 kvsns_shell/kvsns_busybox %{buildroot}%{_bindir}
@@ -179,8 +95,6 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root)
 %{_libdir}/pkgconfig/libkvsns.pc
 %{_includedir}/kvsns/kvsns.h
-%{_includedir}/kvsns/kvsal.h
-%{_includedir}/kvsns/extstore.h
 
 %files utils
 %defattr(-,root,root)
@@ -192,31 +106,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/cp_put.sh
 %{_bindir}/cp_get.sh
  
-%files extstore-posix
-%{_libdir}/libextstore_posix.so*
-
-%files extstore-crud_cache
-%{_libdir}/libextstore_crud_cache.so*
-%{_libdir}/libobjstore_cmd.so*
-
-%if %{with redis}
-%files kvsal-redis
-%{_libdir}/libkvsal_redis.so*
-%endif
-
-%if %{with motr}
-%files motr
-%{_libdir}/libextstore_motr.so*
-%{_libdir}/libkvsal_motr.so*
-%{_libdir}/libm0common.so*
-%endif
-
-%if %{with rados}
-%files extstore-rados
-%{_libdir}/libextstore_rados.so*
-%endif
-
-
 %changelog
 * Wed Nov  3 2021 Philippe DENIEL <philippe.deniel@cea.fr> 1.3.0
 - Better layering between kvsns, kvsal aand extstore. 
