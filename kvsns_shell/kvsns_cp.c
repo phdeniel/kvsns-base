@@ -36,8 +36,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include <kvsns/kvsal.h>
-#include <kvsns/kvsns.h>
+#include <iosea/kvsal.h>
+#include <iosea/kvsns.h>
 
 #define IOLEN 4096
 

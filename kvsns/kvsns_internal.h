@@ -37,8 +37,8 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <ini_config.h>
-#include <kvsns/kvsns.h>
-#include <kvsns/extstore.h>
+#include <iosea/kvsns.h>
+#include <iosea/extstore.h>
 #include <string.h>
 #include <syslog.h>
 

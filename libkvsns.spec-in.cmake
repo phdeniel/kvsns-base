@@ -69,9 +69,9 @@ make %{?_smp_mflags} || make %{?_smp_mflags} || make
 mkdir -p %{buildroot}%{_bindir}
 mkdir -p %{buildroot}%{_libdir}
 mkdir -p %{buildroot}%{_libdir}/pkgconfig
-mkdir -p %{buildroot}%{_includedir}/kvsns
+mkdir -p %{buildroot}%{_includedir}/iosea
 mkdir -p %{buildroot}%{_sysconfdir}/kvsns.d
-install -m 644 include/kvsns/kvsns.h  %{buildroot}%{_includedir}/kvsns
+install -m 644 include/iosea/kvsns.h  %{buildroot}%{_includedir}/iosea
 install -m 644 kvsns/libkvsns.so %{buildroot}%{_libdir}
 install -m 644 libkvsns.pc  %{buildroot}%{_libdir}/pkgconfig
 install -m 755 kvsns_shell/kvsns_busybox %{buildroot}%{_bindir}
@@ -94,7 +94,7 @@ rm -rf $RPM_BUILD_ROOT
 %files devel
 %defattr(-,root,root)
 %{_libdir}/pkgconfig/libkvsns.pc
-%{_includedir}/kvsns/kvsns.h
+%{_includedir}/iosea/kvsns.h
 
 %files utils
 %defattr(-,root,root)

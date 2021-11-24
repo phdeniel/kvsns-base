@@ -34,8 +34,8 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <errno.h>
-#include <kvsns/kvsal.h>
-#include <kvsns/kvsns.h>
+#include <iosea/kvsal.h>
+#include <iosea/kvsns.h>
 
 /* Required Protoype */
 int kvsns_next_inode(kvsns_ino_t *ino);

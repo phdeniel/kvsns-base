@@ -37,8 +37,8 @@
 #include <time.h>
 #include <sys/time.h>
 #include <string.h>
-#include <kvsns/kvsal.h>
-#include <kvsns/kvsns.h>
+#include <iosea/kvsal.h>
+#include <iosea/kvsns.h>
 #include "kvsns_internal.h"
 
 extern struct kvsal_ops kvsal;

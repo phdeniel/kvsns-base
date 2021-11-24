@@ -41,8 +41,8 @@
 #include <getopt.h> /* For long options */
 #include <string.h>
 #include <ctype.h>
-#include <kvsns/kvsal.h>
-#include <kvsns/kvsns.h>
+#include <iosea/kvsal.h>
+#include <iosea/kvsns.h>
 
 enum action {
 	INVALID = -1,

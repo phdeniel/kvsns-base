@@ -40,9 +40,9 @@
 #include <dlfcn.h>  /* for dlopen and dlsym */
 #include <syslog.h>
 #include <ini_config.h>
-#include <kvsns/kvsal.h>
-#include <kvsns/kvsns.h>
-#include <kvsns/extstore.h>
+#include <iosea/kvsal.h>
+#include <iosea/kvsns.h>
+#include <iosea/extstore.h>
 #include "kvsns_internal.h"
 
 static struct collection_item *cfg_items;

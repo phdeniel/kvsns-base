@@ -13,8 +13,8 @@
 #include <sys/types.h>
 #include <sys/param.h>
 #include <libgen.h>
-#include <kvsns/kvsal.h>
-#include <kvsns/kvsns.h>
+#include <iosea/kvsal.h>
+#include <iosea/kvsns.h>
 
 extern struct kvsal_ops kvsal;
 

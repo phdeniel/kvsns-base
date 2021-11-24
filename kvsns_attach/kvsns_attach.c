@@ -41,8 +41,8 @@
 #include <getopt.h> /* For long options */
 #include <string.h>
 #include <time.h>
-#include <kvsns/kvsal.h>
-#include <kvsns/kvsns.h>
+#include <iosea/kvsal.h>
+#include <iosea/kvsns.h>
 
 /* Flag set by ?--verbose?. */
 static int verbose_flag;

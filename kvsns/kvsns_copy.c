@@ -36,9 +36,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include <kvsns/kvsal.h>
-#include <kvsns/kvsns.h>
-#include <kvsns/extstore.h>
+#include <iosea/kvsal.h>
+#include <iosea/kvsns.h>
+#include <iosea/extstore.h>
 #include "kvsns_internal.h"
 
 #define BUFFSIZE 40960
