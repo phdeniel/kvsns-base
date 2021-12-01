@@ -15,6 +15,14 @@ set(LIBKVSNS_BASE_VERSION ${LIBKVSNS_MAJOR_VERSION}.${LIBKVSNS_MINOR_VERSION}.${
 message( STATUS "cmake version ${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}" )
 message( STATUS "libkvsns version ${LIBKVSNS_BASE_VERSION}")
 
+option(EXT_BUILD "Get include deps in upper levels" "")
+
+if(EXT_BUILD)
+  message(STATUS "EXT_BUILD=${EXT_BUILD}")
+  link_directories(${EXT_BUILD}/usr/local/lib)
+  include_directories(AFTER ${EXT_BUILD}/usr/local/include)
+endif(EXT_BUILD)
+
 # Final tuning
 
 include(CheckIncludeFiles)
@@ -96,4 +104,4 @@ endif(NOT WITHIN_IOSEA_NAMESPACE_REPO)
 
 # INSTALL
 install(FILES ${PROJECT_SOURCE_DIR}/libkvsns.pc DESTINATION lib)
-install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/kvsns DESTINATION include)
+install(FILES ${PROJECT_SOURCE_DIR}/include/iosea/kvsns.h DESTINATION include/iosea)

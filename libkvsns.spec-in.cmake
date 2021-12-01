@@ -60,7 +60,8 @@ This package contains the tools for libkvsns.
 %setup -q -n %{sourcename}
 
 %build
-cmake . 
+cmake -DEXT_BUILD=@EXT_BUILD@ . 
+
 
 make %{?_smp_mflags} || make %{?_smp_mflags} || make
 
