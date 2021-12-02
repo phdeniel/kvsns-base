@@ -59,8 +59,6 @@
 #define KVSNS_GETENV "KVSNS_CONFIG"
 #define KVSNS_STORE "KVSNS_STORE"
 #define KVSNS_SERVER "KVSNS_SERVER"
-#define KLEN 256
-#define VLEN 256
 
 #define KVSNS_URL "kvsns:"
 #define KVSNS_URL_LEN 6
