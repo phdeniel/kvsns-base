@@ -10,7 +10,9 @@ Group: Development/Libraries
 Url: http://github.com/phdeniel/libkvsns
 Source: %{sourcename}.tar.gz
 BuildRequires: cmake libini_config-devel
-BuildRequires: gcc
+BuildRequires: cmake libini_config-devel
+BuildRequires: gcc cmake
+BuildRequires: libkvsal-devel libextstore-devel
 Requires: libini_config
 Provides: %{name} = %{version}-%{release}
 
