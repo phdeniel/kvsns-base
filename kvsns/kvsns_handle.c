@@ -37,6 +37,7 @@
 #include <string.h>
 #include <time.h>
 #include <sys/time.h>
+#include <fnmatch.h>
 #include <iosea/kvsal.h>
 #include <iosea/kvsns.h>
 #include <iosea/extstore.h>
@@ -672,3 +673,81 @@ int kvsns_mr_proper(void)
 	return 0;
 }
 
+int kvsns_dump_manifest(FILE *file)
+{
+	int rc;
+	kvsal_list_t list;
+	kvsal_item_t *items;
+	int offset;
+	int i;
+	int size = KVSAL_ARRAY_SIZE;
+	char v[VLEN];
+	struct stat bs;
+
+	list.content = NULL;
+	list.size = 0;
+	offset = 0;
+
+	rc = kvsal.fetch_list("*", &list);
+	if (rc < 0)
+		return rc;
+
+	items = (kvsal_item_t *)malloc(size * sizeof(kvsal_item_t));
+	if (items == NULL)
+		return -ENOMEM;
+	memset(items, 0, size*sizeof(kvsal_item_t));
+
+	do {
+		size = KVSAL_ARRAY_SIZE;
+		rc = kvsal.get_list(&list, offset, &size, items);
+		if (rc < 0) {
+			free(items);
+			return rc;
+		}
+
+		for (i = 0; i < size ; i++) {
+			/* Is this a "stat" key */
+			if (!fnmatch("*.stat", items[i].str, 0)) {
+				rc = kvsal.get_stat(items[i].str, &bs);
+				if (rc < 0) {
+					free(items);
+					return rc;
+				}
+
+				fprintf(file,
+					"%s stat=(u=%d,g=%d,ino=%d,m=0%o,nl=%d,"
+				        "a=%lu.%lu,m=%lu.%lu,c=%lu.%lu)\n",
+					items[i].str,
+					(int)bs.st_uid,
+					(int)bs.st_gid,
+					(int)bs.st_ino,
+					bs.st_mode,
+					(int)bs.st_nlink,
+					(long)bs.st_atim.tv_sec,
+					bs.st_atim.tv_nsec,
+					(long)bs.st_mtim.tv_sec,
+					bs.st_mtim.tv_nsec,
+					(long)bs.st_ctim.tv_sec,
+					bs.st_ctim.tv_nsec);
+			} else {
+				rc = kvsal.get_char(items[i].str, v);
+				if (rc < 0) {
+					free(items);
+					return rc;
+				}
+
+				fprintf(file, "key=%s value=%s\n",
+					items[i].str, v);
+			}
+			offset += 1;
+		}
+
+	} while (size > 0);
+
+	free(items);
+	rc = kvsal.dispose_list(&list);
+	if (rc < 0)
+		return rc;
+
+	return 0;
+}

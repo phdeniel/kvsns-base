@@ -709,6 +709,23 @@ int main(int argc, char *argv[])
 	} else if (!strcmp(exec_name, "ns_mr_proper")) {
 		rc = kvsns_mr_proper();
 		printf("Mr Proper: rc=%d\n", rc);
+	} else if (!strcmp(exec_name, "ns_dump_manifest")) {
+		FILE *file;
+
+		if (argc != 2) {
+			fprintf(stderr, "dump_manifest <path>\n");
+			exit(1);
+		}
+
+		file = fopen(argv[1], "w+");
+		if (!file) {
+			fprintf(stderr, "Can't open %s: errno=%d\n",
+				argv[1], errno);
+			exit(1);
+		}
+		rc = kvsns_dump_manifest(file);
+		fclose(file);
+		printf("Dump Manifest: rc=%d\n", rc);
 	} else
 		fprintf(stderr, "%s does not exists\n", exec_name);
 	printf("######## OK ########\n");

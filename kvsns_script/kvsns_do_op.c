@@ -686,6 +686,23 @@ int do_op(int argc, char *argv[])
 	} else if (!strcmp(exec_name, "mr_proper")) {
 		rc = kvsns_mr_proper();
 		printf("Mr Proper: rc=%d\n", rc);
+	} else if(!strcmp(exec_name, "dump_manifest")) {
+		FILE *file;
+
+		if (argc != 2) {
+			fprintf(stderr, "dump_manifest <path>\n");
+			return -1;
+		}
+
+		file = fopen(argv[1], "w+");
+		if (!file) {
+			fprintf(stderr, "Can't open %s: errno=%d\n",
+				argv[1], errno);
+			return 1;
+		}
+		rc = kvsns_dump_manifest(file);
+		fclose(file);
+		printf("Dump Manifest: rc=%d\n", rc);
 	} else if (!strcmp(exec_name, "sleep")) {
 		if (argc != 2) {
 			fprintf(stderr, "sleep <timeout in seconds>\n");

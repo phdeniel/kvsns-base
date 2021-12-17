@@ -641,6 +641,14 @@ int kvsns_attach(kvsns_cred_t *cred, kvsns_ino_t *parent, char *name,
 		 char *objid, int objid_len, struct stat *stat,
 		 int statflags, kvsns_ino_t *newfile);
 
+/**
+ *  High level API: Dump the key-value pair in a manifest
+ *
+ * @param file   - file handler (empty)
+ *
+ * @return 0 if successful, a negative "-errno" value in case of failure
+ */
+int kvsns_dump_manifest(FILE *file);
 
 /* Pseudo HSM */
 
