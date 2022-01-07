@@ -1,0 +1,11 @@
+/!\ /!\ /!\ /!\ /!\ /!\    WARNING   /!\ /!\ /!\ /!\ /!\ /!\ 
+------------------------------------------------------------
+
+This directory is about to be deprecated, kvsns_busybox and related links will soon disappear.
+The same feature will remain, but they will be replaced by wrappers to kvsns_script.
+
+/!\ /!\ /!\ /!\ /!\ /!\    WARNING   /!\ /!\ /!\ /!\ /!\ /!\ 
+------------------------------------------------------------
+
+
+
