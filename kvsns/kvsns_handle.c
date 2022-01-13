@@ -472,7 +472,6 @@ int kvsns_unlink(kvsns_cred_t *cred, kvsns_ino_t *dir, char *name)
 	RC_WRAP(kvsns_access, cred, dir, KVSNS_ACCESS_WRITE);
 
 	RC_WRAP(kvsns_lookup, cred, dir, name, &ino);
-	RC_WRAP(kvsns_get_objectid, &ino, &eid);
 
 	RC_WRAP(kvsns_get_stat, dir, &dir_stat);
 	RC_WRAP(kvsns_get_stat, &ino, &ino_stat);
@@ -547,14 +546,15 @@ int kvsns_unlink(kvsns_cred_t *cred, kvsns_ino_t *dir, char *name)
 
 	/* Call to object store : do not mix with metadata transaction */
 	if (!opened && deleted && !is_symlink) {
+		RC_WRAP(kvsns_get_objectid, &ino, &eid);
 		RC_WRAP(extstore.del, &eid);
 		snprintf(k, KLEN, "%llu.objid", ino);
 		RC_WRAP(kvsal.del, k);
 	}
 
-	if (deleted) 
+	if (deleted)
 		RC_WRAP(kvsns_remove_all_xattr, cred, &ino);
-		
+
 	return 0;
 
 aborted:
