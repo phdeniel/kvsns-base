@@ -748,6 +748,16 @@ int do_op(int argc, char *argv[])
 		strcpy(k, argv[1]); 
 		rc = kvsal.get_char(k, v);
 		printf("kvsal_get: %s=%s rc=%d\n", argv[1], v, rc);
+	} else if (!strcmp(exec_name, "write")) {
+		if (argc != 4) {
+			fprintf(stderr, "write <filename> <offset> <buffer>\n");
+			return 1;
+		}
+	} else if (!strcmp(exec_name, "read")) {
+		if (argc != 3) {
+			fprintf(stderr, "read <filename> <offset>\n");
+			return 1;
+		}
 	} else
 		fprintf(stderr, "%s does not exists\n", exec_name);
 
