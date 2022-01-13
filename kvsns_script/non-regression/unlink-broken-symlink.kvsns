@@ -1,0 +1,3 @@
+ln broken there_is_no_file
+readlink broken
+rm broken
