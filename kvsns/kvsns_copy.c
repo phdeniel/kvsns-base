@@ -55,7 +55,7 @@ int kvsns_cp_from(kvsns_cred_t *cred, kvsns_file_open_t *kfd,
 	char buff[BUFFSIZE];
 	struct stat stat;
 	size_t filesize;
-	extstore_id_t eid; 
+	extstore_id_t eid;
 
 	rc = kvsns_getattr(cred, &kfd->ino, &stat);
 	if (rc < 0)
@@ -127,7 +127,7 @@ int kvsns_cp_to(kvsns_cred_t *cred, int fd_source,
 	RC_WRAP(kvsns_get_objectid, &kfd->ino, &eid);
 	rc = extstore.cp_to(fd_source, &eid, iolen, filesize);
 
-	if (rc == -ENOTSUP) { 
+	if (rc == -ENOTSUP) {
 		off = 0LL;
 		while (off < filesize) {
 			len = (remains > iolen) ? iolen : remains;

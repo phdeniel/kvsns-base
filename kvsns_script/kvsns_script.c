@@ -37,12 +37,22 @@ static int setargs(char *args, char **argv)
 {
 	int count = 0;
 
-	while (isspace(*args)) ++args;
+	while (isspace(*args))
+		++args;
+
 	while (*args) {
-		if (argv) argv[count] = args;
-		while (*args && !isspace(*args)) ++args;
-		if (argv && *args) *args++ = '\0';
-		while (isspace(*args)) ++args;
+		if (argv)
+			argv[count] = args;
+
+		while (*args && !isspace(*args))
+			++args;
+
+		if (argv && *args)
+			*args++ = '\0';
+
+		while (isspace(*args))
+			++args;
+
 		count++;
 	}
 	return count;
@@ -55,10 +65,10 @@ char **parsedargs(char *args, int *argc)
 
 	if (args && *args
 		 && (args = strdup(args))
-		 && (argn = setargs(args,NULL))
+		 && (argn = setargs(args, NULL))
 		 && (argv = malloc((argn+1) * sizeof(char *)))) {
 		*argv++ = args;
-		argn = setargs(args,argv);
+		argn = setargs(args, argv);
 	}
 
 	if (args && !argv) free(args);
@@ -72,7 +82,7 @@ void freeparsedargs(char **argv)
 	if (argv) {
 		free(argv[-1]);
 		free(argv-1);
-	} 
+	}
 }
 
 int read_file_by_line(char *filename)
@@ -93,16 +103,16 @@ int read_file_by_line(char *filename)
 		fprintf(stderr, "Can't open %s : errno=%d\n", filename, errno);
 		exit(1);
 	}
-	
+
 	while (fgets(line, sizeof(line), file)) {
 		printf("= exec =>%s", line);
 
-	
+
 		av = parsedargs(line, &ac);
 #ifdef DEBUG
-		printf("\tac == %d\n",ac);
+		printf("\tac == %d\n", ac);
 		for (i = 0; i < ac; i++)
-			printf("\t\t[%s]\n",av[i]);
+/bin/bash: wq: command not found
 #endif
 		if (ac != 0)
 			rc = do_op(ac, av);
@@ -127,7 +137,7 @@ int main(int argc, char *argv[])
 
 	if (argc != 2) {
 		fprintf(stderr, "%s <script file>\n", exec_name);
-		exit(1); 
+		exit(1);
 	}
 
 	rc = kvsns_start(NULL);
@@ -156,7 +166,7 @@ int main(int argc, char *argv[])
 		exec_name, current_inode, parent_inode,
 		current_path, prev_path);
 
-	return read_file_by_line(argv[1]);	
+	return read_file_by_line(argv[1]);
 }
 
 

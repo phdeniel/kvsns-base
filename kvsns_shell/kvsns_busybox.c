@@ -453,6 +453,7 @@ int main(int argc, char *argv[])
 	} else if (!strcmp(exec_name, "ns_truncate")) {
 		kvsns_ino_t fino = 0LL;
 		struct stat stat;
+
 		memset(&stat, 0, sizeof(stat));
 
 		if (argc != 3) {
@@ -497,7 +498,7 @@ int main(int argc, char *argv[])
 				ino, argv[2], argv[3]);
 		else
 			fprintf(stderr, "Failed : %d\n", rc);
-	 } else if (!strcmp(exec_name, "ns_getxattr")) {
+	} else if (!strcmp(exec_name, "ns_getxattr")) {
 		char value[VLEN];
 		size_t xattr_size = KLEN;
 

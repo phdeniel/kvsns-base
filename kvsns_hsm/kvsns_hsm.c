@@ -135,7 +135,7 @@ static int do_action(enum action action, char *path)
 		break;
 	default:
 		fprintf(stderr,
-			"BUG: invalid ation %d in do_action\n", action);
+			"BUG: invalid ation %d in %s\n", action, __func__);
 		exit(-1);
 	}
 

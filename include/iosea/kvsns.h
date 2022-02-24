@@ -59,8 +59,14 @@
 #define KVSNS_GETENV "KVSNS_CONFIG"
 #define KVSNS_STORE "KVSNS_STORE"
 #define KVSNS_SERVER "KVSNS_SERVER"
+
+#ifndef KLEN
 #define KLEN 256
+#endif
+
+#ifndef VLEN
 #define VLEN 256
+#endif
 
 #define KVSNS_URL "kvsns:"
 #define KVSNS_URL_LEN 6
@@ -86,7 +92,7 @@
 #define STAT_OTHER_WRITE	0002	/* Write by other. */
 #define STAT_OTHER_EXEC		0001	/* Execute by other. */
 
-#define KVSNS_ACCESS_READ 	1
+#define KVSNS_ACCESS_READ	1
 #define KVSNS_ACCESS_WRITE	2
 #define KVSNS_ACCESS_EXEC	4
 
@@ -138,9 +144,10 @@ typedef struct kvsns_xattr__ {
 } kvsns_xattr_t;
 
 /**
- * Start the kvsns library. This should be done by every thread using the library
+ * Start the kvsns library. This should be done by every thread
+ * using the library
  *
- * @note: this function will allocate required resources and set useful 
+ * @note: this function will allocate required resources and set useful
  * variables to their initial value. As the programs ends kvsns_stop() should be
  * invoked to perform all needed cleanups.
  * In this version of the API, it takes no parameter, but this may change in
@@ -173,7 +180,7 @@ int kvsns_stop(void);
 int kvsns_init_root(int openbar);
 
 /**
- * Check is a given user can access an inode 
+ * Check is a given user can access an inode
  *
  * @note: this call is similar to POSIX's access() call. It behaves the same.
  *
@@ -182,7 +189,7 @@ int kvsns_init_root(int openbar);
  * @params flags - access to be tested. The flags are the same as those used
  * by libc's access() function.
  *
- * @return 0 if access is granted, a negative value means an error. -EPERM 
+ * @return 0 if access is granted, a negative value means an error. -EPERM
  * is returned when access is not granted
  */
 int kvsns_access(kvsns_cred_t *cred, kvsns_ino_t *ino, int flags);
@@ -281,11 +288,11 @@ int kvsns_link(kvsns_cred_t *cred, kvsns_ino_t *ino, kvsns_ino_t *dino,
 	    char *dname);
 
 /**
- * Renames an entry. 
+ * Renames an entry.
  *
  * @param cred - pointer to user's credentials
  * @param sino - pointer to source directory's inode
- * @param sname - source name of the entry to be moved 
+ * @param sname - source name of the entry to be moved
  * @param dino - pointer to destination directory's inode
  * @param dname - name of the new entry in dino
  *
@@ -309,7 +316,7 @@ int kvsns_lookup(kvsns_cred_t *cred, kvsns_ino_t *parent, char *name,
 		 kvsns_ino_t *myino);
 
 /**
- * Finds the parent inode of an entry. 
+ * Finds the parent inode of an entry.
  *
  * @note : because of this call, directories do not contain explicit
  * "." and ".." directories. The namespace's root directory is the only
@@ -324,7 +331,7 @@ int kvsns_lookup(kvsns_cred_t *cred, kvsns_ino_t *parent, char *name,
  */
 int kvsns_lookupp(kvsns_cred_t *cred, kvsns_ino_t *where, kvsns_ino_t *parent);
 
-/** 
+/**
  * Finds the root of the namespace
  *
  * @param ino - [OUT] points to root inode if successful
@@ -351,7 +358,7 @@ int kvsns_getattr(kvsns_cred_t *cred, kvsns_ino_t *ino, struct stat *buffstat);
  * Sets attributes for a known inode.
  *
  * This call uses a struct stat structure as input. This structure will
- * contain the values to be set. More than one can be set in a single call. 
+ * contain the values to be set. More than one can be set in a single call.
  * The parameter "statflags: indicates which fields are to be considered:
  *  STAT_MODE_SET: sets mode
  *  STAT_UID_SET: sets owner
@@ -364,7 +371,7 @@ int kvsns_getattr(kvsns_cred_t *cred, kvsns_ino_t *ino, struct stat *buffstat);
  * @param cred - pointer to user's credentials
  * @param ino - pointer to current inode
  * @param setstat - a stat structure containing the new values
- * @param statflags - a bitmap that tells which attributes are to be set 
+ * @param statflags - a bitmap that tells which attributes are to be set
  *
  * @return 0 if successful, a negative "-errno" value in case of failure
  */
@@ -427,7 +434,7 @@ int kvsns_closedir(kvsns_dir_t *ddir);
  * @param cred - pointer to user's credentials
  * @param ino - file's inode
  * @param flags - open flags (see man 2 open)
- * @param mode - unused 
+ * @param mode - unused
  * @param fd - [OUT] handle to opened file.
  *
  * @return 0 if successful, a negative "-errno" value in case of failure
@@ -448,7 +455,7 @@ int kvsns_open(kvsns_cred_t *cred, kvsns_ino_t *ino,
  * @param parent - parent's inode
  * @param name- file's name
  * @param flags - open flags (see man 2 open)
- * @param mode - unused 
+ * @param mode - unused
  * @param fd - [OUT] handle to opened file.
  *
  * @return 0 if successful, a negative "-errno" value in case of failure
@@ -465,7 +472,7 @@ int kvsns_openat(kvsns_cred_t *cred, kvsns_ino_t *parent, char *name,
  */
 int kvsns_close(kvsns_file_open_t *fd);
 
-/** 
+/**
  * Writes data to an opened fd
  *
  * @param cred - pointer to user's credentials
@@ -479,7 +486,7 @@ int kvsns_close(kvsns_file_open_t *fd);
 ssize_t kvsns_write(kvsns_cred_t *cred, kvsns_file_open_t *fd,
 		  void *buf, size_t count, off_t offset);
 
-/** 
+/**
  * Reads data from an opened fd
  *
  * @param cred - pointer to user's credentials
@@ -573,7 +580,7 @@ int kvsns_remove_all_xattr(kvsns_cred_t *cred, kvsns_ino_t *ino);
 
 /* For utility */
 
-/** 
+/**
  * Deletes everything in the namespace but the root directory...
  *
  * @param (node) - void function.

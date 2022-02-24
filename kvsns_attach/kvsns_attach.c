@@ -31,7 +31,7 @@
 
 #ifndef _GNU_SOURCE
 #define _GNU_SOURCE
-#endif 
+#endif
 
 #include <stdio.h>
 #include <errno.h>
@@ -159,8 +159,8 @@ int main(int argc, char **argv)
 			{"verbose", no_argument,	   &verbose_flag, 1},
 			{"brief",   no_argument,	   &verbose_flag, 0},
 			{"help",   no_argument,	   &verbose_flag, 0},
-			/* These options don?t set a flag.
-			 * We distinguish them by their indices. */
+			/* These options don?t set a flag. */
+			/* We distinguish them by their indices. */
 			{"user",  required_argument, 0, 0},
 			{"group",  required_argument, 0, 0},
 			{"path",  required_argument, 0, 0},

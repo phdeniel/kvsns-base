@@ -175,9 +175,10 @@ aborted:
 int kvsns_opendir(kvsns_cred_t *cred, kvsns_ino_t *dir, kvsns_dir_t *ddir)
 {
 	char pattern[KLEN];
-	if (!cred || ! dir || !ddir)
+
+	if (!cred || !dir || !ddir)
 		return -EINVAL;
-	
+
 	snprintf(pattern, KLEN, "%llu.dentries.*", *dir);
 
 	ddir->ino = *dir;
@@ -302,7 +303,7 @@ int kvsns_getattr(kvsns_cred_t *cred, kvsns_ino_t *ino, struct stat *bufstat)
 	/* special action is required for files */
 	if (S_ISREG(bufstat->st_mode)) {
 		/* for file, information is to be retrieved form extstore */
-		RC_WRAP(kvsns_get_objectid,ino, &eid);
+		RC_WRAP(kvsns_get_objectid, ino, &eid);
 		rc = extstore.getattr(&eid, &data_stat);
 		if (rc != 0) {
 			if (rc == -ENOENT)
@@ -514,6 +515,7 @@ int kvsns_unlink(kvsns_cred_t *cred, kvsns_ino_t *dir, char *name)
 			if (parent[i] == *dir) {
 				/* In this list mgmt, setting value 0
 				 * will make it ignored as str is rebuilt */
+
 				parent[i] = 0;
 				break;
 			}
@@ -716,7 +718,7 @@ int kvsns_dump_manifest(FILE *file)
 
 				fprintf(file,
 					"%s stat=(u=%d,g=%d,ino=%d,m=0%o,nl=%d,"
-				        "a=%lu.%lu,m=%lu.%lu,c=%lu.%lu)\n",
+					"a=%lu.%lu,m=%lu.%lu,c=%lu.%lu)\n",
 					items[i].str,
 					(int)bs.st_uid,
 					(int)bs.st_gid,

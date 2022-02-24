@@ -260,6 +260,7 @@ int do_op(int argc, char *argv[])
 		kvsns_dentry_t dirent[10];
 		kvsns_dir_t dirfd;
 		int i;
+
 		memset(dirent, 0, 10*sizeof(kvsns_dentry_t));
 
 		rc = kvsns_opendir(&cred, &current_inode, &dirfd);
@@ -474,7 +475,7 @@ int do_op(int argc, char *argv[])
 				ino, argv[2], argv[3]);
 		else
 			fprintf(stderr, "Failed : %d\n", rc);
-	 } else if (!strcmp(exec_name, "getxattr")) {
+	} else if (!strcmp(exec_name, "getxattr")) {
 		char value[VLEN];
 		size_t xattr_size = KLEN;
 
@@ -686,7 +687,7 @@ int do_op(int argc, char *argv[])
 	} else if (!strcmp(exec_name, "mr_proper")) {
 		rc = kvsns_mr_proper();
 		printf("Mr Proper: rc=%d\n", rc);
-	} else if(!strcmp(exec_name, "dump_manifest")) {
+	} else if (!strcmp(exec_name, "dump_manifest")) {
 		FILE *file;
 
 		if (argc != 2) {
@@ -718,22 +719,29 @@ int do_op(int argc, char *argv[])
 		printf("\n");
 	} else if (!strcmp(exec_name, "timer_start")) {
 		if (gettimeofday(&tv_start, NULL))
-			fprintf(stderr, "error in gettimeofday: errno=%d\n", errno);
+			fprintf(stderr,
+				"error in gettimeofday: errno=%d\n",
+				errno);
 	} else if (!strcmp(exec_name, "timer_stop")) {
 		if (gettimeofday(&tv_stop, NULL))
-			fprintf(stderr, "error in gettimeofday: errno=%d\n", errno);
+			fprintf(stderr,
+				"error in gettimeofday: errno=%d\n",
+				errno);
 
-		float time_diff = (tv_stop.tv_sec - tv_start.tv_sec) + 1e-6*(tv_stop.tv_usec - tv_start.tv_usec);
+		float time_diff = (tv_stop.tv_sec - tv_start.tv_sec) +
+		       		  1e-6*(tv_stop.tv_usec - tv_start.tv_usec);
+
 		printf("-+-+-+-+> timer difference: %f\n", time_diff);;
 	} else if (!strcmp(exec_name, "kvsal_set")) {
 		int rc;
 		char k[KLEN];
 		char v[VLEN];
+
 		if (argc != 3) {
 			fprintf(stderr, "kvsal_set <key> <value>\n");
 			return 1;
 		}
-		strcpy(k, argv[1]); 
+		strcpy(k, argv[1]);
 		strcpy(v, argv[2]);
 		rc = kvsal.set_char(k, v);
 		printf("kvsal_set: rc=%d\n", rc);
@@ -741,11 +749,12 @@ int do_op(int argc, char *argv[])
 		int rc;
 		char k[KLEN];
 		char v[VLEN];
+
 		if (argc != 2) {
 			fprintf(stderr, "kvsal_get <key> \n");
 			return 1;
 		}
-		strcpy(k, argv[1]); 
+		strcpy(k, argv[1]);
 		rc = kvsal.get_char(k, v);
 		printf("kvsal_get: %s=%s rc=%d\n", argv[1], v, rc);
 	} else if (!strcmp(exec_name, "write")) {

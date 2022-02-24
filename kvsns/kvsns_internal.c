@@ -46,6 +46,7 @@ extern struct kvsal_ops kvsal;
 int kvsns_next_inode(kvsns_ino_t *ino)
 {
 	int rc;
+
 	if (!ino)
 		return -EINVAL;
 
@@ -172,7 +173,7 @@ int kvsns_get_objectid(kvsns_ino_t *ino,
 int kvsns_create_entry(kvsns_cred_t *cred, kvsns_ino_t *parent,
 		       char *name, char *lnk, mode_t mode,
 		       kvsns_ino_t *new_entry, enum kvsns_type type,
-		       extstore_id_t *eid, 
+		       extstore_id_t *eid,
 		       int (*nof)(extstore_id_t *, unsigned int, char *))
 {
 	int rc;
@@ -210,7 +211,7 @@ int kvsns_create_entry(kvsns_cred_t *cred, kvsns_ino_t *parent,
 
 	/* Set stat */
 	memset(&bufstat, 0, sizeof(struct stat));
-	bufstat.st_uid = cred->uid; 
+	bufstat.st_uid = cred->uid;
 	bufstat.st_gid = cred->gid;
 	bufstat.st_ino = *new_entry;
 
@@ -264,9 +265,9 @@ int kvsns_create_entry(kvsns_cred_t *cred, kvsns_ino_t *parent,
 
 		if (eid->len == 0) { /* Is eid defined */
 			/* eid is provided is file is attached
- 			 * otherwise we should create it 
- 			 */ 
-	
+			 * otherwise we should create it
+			 */
+
 			if (!nof) {
 				rc = -EINVAL;
 				goto aborted;
@@ -275,7 +276,7 @@ int kvsns_create_entry(kvsns_cred_t *cred, kvsns_ino_t *parent,
 			seedlen = snprintf(seed, 2*MAXNAMLEN,
 					   "inum=%llu:name=%s",
 					   (unsigned long long)*new_entry,
-					   name);			
+					   name);
 			rc = nof(eid, seedlen, seed);
 		}
 

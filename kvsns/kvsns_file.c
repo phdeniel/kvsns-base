@@ -46,7 +46,7 @@ extern struct extstore_ops extstore;
 extern struct kvsal_ops kvsal;
 
 static int kvsns_str2ownerlist(kvsns_open_owner_t *ownerlist, int *size,
-			        char *str)
+			       char *str)
 {
 	char *token;
 	char *rest = str;
@@ -59,7 +59,7 @@ static int kvsns_str2ownerlist(kvsns_open_owner_t *ownerlist, int *size,
 	maxsize = *size;
 	pos = 0;
 
-	while((token = strtok_r(rest, "|", &rest))) {
+	while ((token = strtok_r(rest, "|", &rest))) {
 		sscanf(token, "%u.%u",
 		       &ownerlist[pos].pid,
 		       &ownerlist[pos].tid);
@@ -101,15 +101,15 @@ int kvsns_creat(kvsns_cred_t *cred, kvsns_ino_t *parent, char *name,
 	extstore_id_t eid;
 
 	/* Poison eid */
-	memset(&eid, 0, sizeof(extstore_id_t));	
+	memset(&eid, 0, sizeof(extstore_id_t));
 
 	RC_WRAP(kvsns_access, cred, parent, KVSNS_ACCESS_WRITE);
 	RC_WRAP(kvsns_create_entry, cred, parent, name, NULL,
-				  mode, newfile, KVSNS_FILE, 
+				  mode, newfile, KVSNS_FILE,
 				  &eid, extstore.new_objectid);
 	RC_WRAP(kvsns_get_stat, newfile, &stat);
 	RC_WRAP(extstore.create, eid);
-	
+
 	return 0;
 }
 
@@ -286,11 +286,11 @@ ssize_t kvsns_write(kvsns_cred_t *cred, kvsns_file_open_t *fd,
 	RC_WRAP(kvsns_get_objectid, &fd->ino, &eid);
 
 	write_amount = extstore.write(&eid,
-                                      offset,
-                                      count,
-                                      buf,
-                                      &stable,
-                                      &wstat);
+				      offset,
+				      count,
+				      buf,
+				      &stable,
+				      &wstat);
 	return write_amount;
 }
 
@@ -306,11 +306,11 @@ ssize_t kvsns_read(kvsns_cred_t *cred, kvsns_file_open_t *fd,
 	RC_WRAP(kvsns_get_objectid, &fd->ino, &eid);
 
 	read_amount = extstore.read(&eid,
-                                    offset,
-                                    count,
-                                    buf,
-                                    &eof,
-                                    &stat);
+				    offset,
+				    count,
+				    buf,
+				    &eof,
+				    &stat);
 	return read_amount;
 }
 
@@ -319,16 +319,16 @@ int kvsns_attach(kvsns_cred_t *cred, kvsns_ino_t *parent, char *name,
 		 char *objid, int objid_len, struct stat *stat, int statflags,
 		  kvsns_ino_t *newfile)
 {
-	extstore_id_t eid; 
+	extstore_id_t eid;
 
 	/* Poison eid */
-	memset(&eid, 0, sizeof(extstore_id_t));	
+	memset(&eid, 0, sizeof(extstore_id_t));
 	eid.len = objid_len,
 	strncpy(eid.data, objid, DATALEN);
 
 	RC_WRAP(kvsns_access, cred, parent, KVSNS_ACCESS_WRITE);
 	RC_WRAP(kvsns_create_entry, cred, parent, name, NULL,
-				    stat->st_mode, newfile, KVSNS_FILE, 
+				    stat->st_mode, newfile, KVSNS_FILE,
 				    &eid, NULL);
 	RC_WRAP(kvsns_setattr, cred, newfile, stat, statflags);
 	RC_WRAP(kvsns_getattr, cred, newfile, stat);
