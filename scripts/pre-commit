@@ -1,0 +1,28 @@
+#!/bin/bash
+# pre-commit hook
+#
+# Run checkpatch on the commit
+
+
+# define colors for use in output
+green='\033[0;32m'
+no_color='\033[0m'
+grey='\033[0;90m'
+
+
+if git rev-parse --verify HEAD 2>/dev/null >/dev/null
+then
+	against=HEAD
+else
+	# Initial commit: diff against an empty tree object
+	against=4b825dc642cb6eb9a060e54bf8d69288fbee4904
+fi
+
+topdir=$(git rev-parse --show-toplevel)
+git diff --cached  $against | $topdir/src/scripts/checkpatch.pl \
+	      --no-signoff -q -
+if [ $? != 0 ]; then
+	exit 1
+fi
+
+exit 0
