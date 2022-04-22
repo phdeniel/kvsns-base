@@ -20,6 +20,10 @@ extern struct kvsal_ops kvsal;
 
 kvsns_cred_t cred;
 
+#define KVSNS_SCRIPT_MAXARGC 20
+char *ARGV[KVSNS_SCRIPT_MAXARGC];
+unsigned int ARGC;
+
 char current_path[MAXPATHLEN];
 char prev_path[MAXPATHLEN];
 char exec_name[MAXPATHLEN];
@@ -85,6 +89,19 @@ void freeparsedargs(char **argv)
 	}
 }
 
+void parse_var(int argc, char *argv[])
+{
+	int i = 0;
+	int ind;
+
+	for (i = 0; i < argc ; i++)
+		if (argv[i][0] == '$') {
+			ind = atoi((char *)&argv[i][1]);
+			if (ind != 0 && ind <= ARGC)
+				argv[i] = ARGV[ind];
+		}
+}
+
 int read_file_by_line(char *filename)
 {
 	FILE *file;
@@ -112,7 +129,14 @@ int read_file_by_line(char *filename)
 #ifdef DEBUG
 		printf("\tac == %d\n", ac);
 		for (i = 0; i < ac; i++)
-/bin/bash: wq: command not found
+			printf("\t\t[%s]\n", av[i]);
+#endif
+		parse_var(ac, av);
+
+#ifdef DEBUG
+		printf("\tac == %d\n", ac);
+		for (i = 0; i < ac; i++)
+			printf("\t\t[%s]\n", av[i]);
 #endif
 		if (ac != 0)
 			rc = do_op(ac, av);
@@ -129,15 +153,26 @@ int read_file_by_line(char *filename)
 int main(int argc, char *argv[])
 {
 	int rc;
+	int i = 0;
 
 	cred.uid = getuid();
 	cred.gid = getgid();
 
 	strncpy(exec_name, basename(argv[0]), MAXPATHLEN);
 
-	if (argc != 2) {
-		fprintf(stderr, "%s <script file>\n", exec_name);
+	if (argc < 2) {
+		fprintf(stderr, "%s <script file> [<arguments>]\n", exec_name);
 		exit(1);
+	}
+
+	ARGC = 0;
+	for (i = 2; i < argc && i < KVSNS_SCRIPT_MAXARGC ; i++) {
+		ARGV[i-1] = malloc(MAXPATHLEN);
+		if (ARGV[i-1] == NULL)
+			return ENOMEM;
+
+		strncpy(ARGV[i-1], argv[i], MAXPATHLEN);
+		ARGC += 1;
 	}
 
 	rc = kvsns_start(NULL);

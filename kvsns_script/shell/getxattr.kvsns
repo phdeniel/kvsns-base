@@ -1,0 +1,1 @@
+getxattr $1 $2
